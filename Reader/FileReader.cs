@@ -69,33 +69,48 @@ namespace Csv_Scrubber
         public void WriteTextConsole(bool console)
         {
             if(Text.Length == 0) return;
+
             for(int i = 0; i < Text.Length; i++){
                 if(Text[i].Substring(0, 2) == "--"){
                     continue;
                 };
+
                 if(Text[i].Substring(0, 2) == " |" || Text[i].Substring(0, 2) != "| ")
                 {
                     ParseError = true;
                     ParseErrorThrown = true;
                     PotentialParseError++;
                 }
+
                 string[] bucket = Text[i].Split("|");
                 bucket = bucket.Skip(1).ToArray();
                 bucket = bucket.Take(bucket.Length - 1).ToArray();
+                bool bucketPass = true;
+
                 for(int j = 0; j < bucket.Length; j++)
                 {
                     bucket[j] = bucket[j].Trim();
                 }
-                if(ParseError)
+
+                if(bucket[0] == "")
+                {
+                    if(bucket.All((str) => { return str == ""; } )) 
+                    {
+                        bucketPass = false;
+                    }
+                }
+
+                if(ParseError && bucketPass)
                 {
                     FilteredText[FilteredText.Count - 1] += String.Join(", ", bucket);
                     ParseError = false;
                 } 
-                else 
+                else if(bucketPass)
                 {
                     FilteredText.Add(String.Join(", ", bucket));
                 }
             }
+
             if(console)
             {
                 for(int i = 0; i < FilteredText.Count; i++)
@@ -103,6 +118,7 @@ namespace Csv_Scrubber
                     Console.WriteLine(FilteredText[i]);
                 }
             }
+
             if(ParseErrorThrown)
             {
                 ParseErrorWarn();
