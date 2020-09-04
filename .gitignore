@@ -1,0 +1,6 @@
+txt-invoice-files/*
+parsed-files/*
+test-file
+.vscode
+bin
+obj
