@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Csv_Scrubber
@@ -11,6 +12,14 @@ namespace Csv_Scrubber
         // string[] Text = System.IO.File.ReadAllLines("../Sales-Invoicing.csv");
         // string[] Text = File.ReadAllLines(@"C:\Users\DreamWalker64\dev2\Cascade\Sales-Invoicing.csv");
         private string[] Text;
+        public string[] text
+        {
+            get
+            {
+                return Text;
+            }
+        }
+
         private string destinationFile;
         private List<string> FilteredText = new List<string>();
         private int PotentialParseError = 0;
@@ -134,6 +143,36 @@ namespace Csv_Scrubber
             WriteTextConsole(false);
             File.WriteAllLines(destinationFile, FilteredText);
             Console.WriteLine("Written to: " + destinationFile);
+        }
+
+        public ArrayList CsvToArrayList()
+        {
+            ArrayList listPass = new ArrayList();
+
+            for(int i = 0; i < Text.Length; i++)
+            {
+                string[] bucket = Text[i].Split(", ");
+                
+                for(int j = 0; j < bucket.Length; j++)
+                {
+                    if(bucket[j].Length > 0)
+                    {
+                        bucket[j] = bucket[j].Replace(",", "");
+                        if(bucket[j].Substring(0, 1) == "(" && bucket[j].Substring(bucket[j].Length - 1) == ")")
+                        {
+                            bucket[j] = bucket[j].Replace("(", "-").Replace(")", "");
+                        }
+                        if(bucket[j].Contains("$"))
+                        {
+                            bucket[j] = bucket[j].Replace("$", "");
+                        }
+                    }
+                    listPass.Add(bucket);
+                }
+            }
+            
+
+            return listPass;
         }
     }
 }

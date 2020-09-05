@@ -6,6 +6,8 @@ namespace Csv_Scrubber
     {
 
         static bool Running = true;
+        static FileCruncher Crunch; // This will currently crash your
+        // program. I have this class on my .gitignore file.
 
         static void Main(string[] args)
         {           
@@ -15,7 +17,8 @@ namespace Csv_Scrubber
                 int command;
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0: Quit\n1: Read File\n2: Write File\n3: Find potential parsing errors");
-                // string command = Console.ReadLine();
+                Console.WriteLine("4: Crunch Bulk (SOURCE This will not work if you cloned)");
+                Console.WriteLine("5: ???");
                 try
                 {
                     command = Int32.Parse(Console.ReadLine());
@@ -61,6 +64,23 @@ namespace Csv_Scrubber
                             File.WriteTextConsole(false);
                         }
                         catch { Console.WriteLine("Unhandled Error"); continue; }
+                        break;
+                    case 4:
+                        try
+                        {
+                            // FileCruncher crunch = new FileCruncher();
+                            // crunch.TextToList();
+                            Crunch = new FileCruncher();
+                        }
+                        catch (Exception err) { Console.WriteLine("Unhandled Error/Missing Classes " + err ); continue; }
+                        break;
+                    case 5:
+                        try
+                        {
+                            string[] tester = (string[])Crunch.cash[0]; 
+                            Console.WriteLine(tester[0]);
+                        }
+                        catch { Console.WriteLine("Unhandled Error/Missing classes"); }
                         break;
                     default:
                         break;
