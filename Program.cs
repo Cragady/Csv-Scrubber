@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections;
 
 namespace Csv_Scrubber
 {
+    
     class Program
     {
-
         static bool Running = true;
-        static FileCruncher Crunch; // This will currently crash your
-        // program. I have this class on my .gitignore file.
+        static FileCruncher Crunch;
 
         static void Main(string[] args)
         {           
@@ -17,8 +17,7 @@ namespace Csv_Scrubber
                 int command;
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0: Quit\n1: Read File\n2: Write File\n3: Find potential parsing errors");
-                Console.WriteLine("4: Crunch Bulk (SOURCE This will not work if you cloned)");
-                Console.WriteLine("5: ???");
+                Console.WriteLine("4: Load Bulk\n5: Crunch Bulk\n6: Pre-file Write (RUN ONLY ONCE)");
                 try
                 {
                     command = Int32.Parse(Console.ReadLine());
@@ -72,15 +71,30 @@ namespace Csv_Scrubber
                             // crunch.TextToList();
                             Crunch = new FileCruncher();
                         }
-                        catch (Exception err) { Console.WriteLine("Unhandled Error/Missing Classes " + err ); continue; }
+                        catch (Exception err) { Console.WriteLine("Unhandled Error " + err); continue; }
                         break;
                     case 5:
                         try
                         {
-                            string[] tester = (string[])Crunch.cash[0]; 
-                            Console.WriteLine(tester[0]);
+                            string [,] tester = Crunch.cash;
+                            string blahh = tester[1, 0];
+                            Console.WriteLine(Int32.Parse(blahh) + 3);
                         }
-                        catch { Console.WriteLine("Unhandled Error/Missing classes"); }
+                        catch { Console.WriteLine("Unhandled Error"); }
+                        break;
+                    case 6:
+                        try
+                        {
+                            Console.WriteLine("Enter the name of the file you want to correct");
+                            string toRead = Console.ReadLine();
+                            toRead = "./txt-invoice-files/" + toRead;
+                            Console.WriteLine("Enter the name of the file");
+                            string dest = Console.ReadLine();
+                            dest = "./txt-invoice-files/" + dest;
+                            FileReader originalEdit = new FileReader(toRead);
+                            originalEdit.PreFileWrite(dest);   
+                        }
+                        catch { Console.WriteLine("Unhandled Error"); }
                         break;
                     default:
                         break;

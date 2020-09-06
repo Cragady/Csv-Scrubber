@@ -70,6 +70,8 @@ namespace Csv_Scrubber
             }
         }
 
+        public FileReader(bool placeHolder){}
+
         public void ParseErrorWarn()
         {
             Console.WriteLine("Potential parsing error found, count: " + PotentialParseError);
@@ -111,12 +113,12 @@ namespace Csv_Scrubber
 
                 if(ParseError && bucketPass)
                 {
-                    FilteredText[FilteredText.Count - 1] += String.Join(", ", bucket);
+                    FilteredText[FilteredText.Count - 1] += String.Join(",&|,", bucket);
                     ParseError = false;
                 } 
                 else if(bucketPass)
                 {
-                    FilteredText.Add(String.Join(", ", bucket));
+                    FilteredText.Add(String.Join(",&|,", bucket));
                 }
             }
 
@@ -145,14 +147,14 @@ namespace Csv_Scrubber
             Console.WriteLine("Written to: " + destinationFile);
         }
 
-        public ArrayList CsvToArrayList()
+        public string[,] CsvToArrayList()
         {
-            ArrayList listPass = new ArrayList();
-
+            int headRow = Text[0].Split(",&|,").Length;
+            string[,] listPass = new string[Text.Length, Text[0].Split(",&|,").Length];
+            
             for(int i = 0; i < Text.Length; i++)
             {
-                string[] bucket = Text[i].Split(", ");
-                
+                string[] bucket = Text[i].Split(",&|,");
                 for(int j = 0; j < bucket.Length; j++)
                 {
                     if(bucket[j].Length > 0)
@@ -167,12 +169,38 @@ namespace Csv_Scrubber
                             bucket[j] = bucket[j].Replace("$", "");
                         }
                     }
-                    listPass.Add(bucket);
+                    
+                    listPass[i, j] = bucket[j];
                 }
             }
-            
 
             return listPass;
+        }
+
+        public void PreFileWrite(string destinationFile)
+        {
+            string[] lineCorrection = Text[1].Split("|");
+            for(int i = 0; i < lineCorrection.Length; i++)
+            {
+                if(i == 0 || i == lineCorrection.Length - 1) continue;
+                int oldLength = lineCorrection[i].Length;
+                lineCorrection[i] = lineCorrection[i].Trim() + " " + (i - 1);
+                int spaceCorrection = (oldLength - lineCorrection[i].Length) / 2;
+                string spaceInserts = "";
+                if(lineCorrection[i].Length % 2 != 0)
+                {
+                    lineCorrection[i] += " ";
+                }
+                for(int j = 0; j < spaceCorrection; j++)
+                {
+                    spaceInserts += " ";
+                }
+                lineCorrection[i] = spaceInserts + lineCorrection[i];
+                lineCorrection[i] += spaceInserts;
+            }
+            Text[1] = String.Join("|", lineCorrection);
+
+            File.WriteAllLines(destinationFile, Text);
         }
     }
 }
