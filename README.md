@@ -1,9 +1,13 @@
 # Purpose
 
-The purpose of this little exercise is to pull data from a Microsoft Access table. In the end, I'll read the files back in for data analyzing. The anlalyzing portion will probably be ignored in this repository, and thrown in a secondary repository. If I am able to write it in a dynamic/generic enough way, I will include it in this repository.
+The purpose of this little exercise is to pull data from a Microsoft Access table. In the end, I'll read the files back in for data analyzing.
 
 This is pretty much a barebones console application. It's likely to be single use, so it likely will not have any upkeep in the future.
 
 # Note on Test File
 
 The `Sales-Invoicing.csv` has been edited heavily, and a lot of information and fields deleted for privacy issues.
+
+# Word of Warning
+
+I am using specific files for this. `FileCruncher` will break the program. I also wrote `FileCruncher` in a way that is slightly obscured to protect data structures, although, it may not be that hard to figure out. The important data is hidden. For `FileCruncher`, you will have to reorganize the class for it to work. This may not be the cleanest code, but it works for me and serves it's current purpose. In the future, I may throw a GUI on this, and customize options for crunching the data. The way it is now, it will have to be changed to fit your specific use case. This part may come after I am satisfied with it's level of data-crunching.
