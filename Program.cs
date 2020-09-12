@@ -67,8 +67,6 @@ namespace Csv_Scrubber
                     case 4:
                         try
                         {
-                            // FileCruncher crunch = new FileCruncher();
-                            // crunch.TextToList();
                             Crunch = new FileCruncher();
                         }
                         catch (Exception err) { Console.WriteLine("Unhandled Error " + err); continue; }
@@ -76,11 +74,9 @@ namespace Csv_Scrubber
                     case 5:
                         try
                         {
-                            string [,] tester = Crunch.cash;
-                            string blahh = tester[1, 0];
-                            Console.WriteLine(Int32.Parse(blahh) + 3);
+                            Crunch.CrunchData();
                         }
-                        catch { Console.WriteLine("Unhandled Error"); }
+                        catch (Exception err) { Console.WriteLine("Unhandled Error " + err); }
                         break;
                     case 6:
                         try

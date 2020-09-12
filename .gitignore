@@ -1,5 +1,5 @@
 txt-invoice-files/*
-txt-preparse
+txt-preparse/*
 parsed-files/*
 test-file
 .vscode
@@ -7,3 +7,4 @@ bin
 obj
 # DataCruncher # Add back if you can't write it in a way that protects the structure
 DataCruncher/HiddenEnums.cs
+ACCDB

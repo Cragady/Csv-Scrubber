@@ -8,7 +8,18 @@ using System.Collections.Generic;
 namespace Csv_Scrubber
 {
 
-    enum eLink { CaMain = 0, CaLinker = 8, ChMain = 7, ChLinker = 16, PuMain = 2, PuLinker = 16,  SaMain = 0, SaLinker = 23, SaLinker2 = 174 }
+    /*
+        This class will crash the program if you cloned.
+        Leaving it in for reasons. Just rework this class
+        if you need your own custom data-crunching. Your
+        files exported from Microsoft Access will be 
+        different from mine.
+    */
+
+    enum eLink { CaMain = 0, CaLinker = 8, CaAm = 26,
+        ChMain = 7, ChLinker = 16, ChAm = 8,
+        PuMain = 2, PuLinker = 16, PuAm = 15,
+        SaMain = 0, SaLinker = 23, SaLinker2 = 174 }
 
     public class FileCruncher
     {
@@ -22,11 +33,18 @@ namespace Csv_Scrubber
         private string[,] ChecksLA;
         private string[,] PurchasesLA;
         private string[,] SalesLA;
+        private double[] SalesMi;
+
+        private int caLength;
+        private int chLength;
+        private int puLength;
+        private int saLength;
 
         public string[,] cash { get{ return CashLA; } }
         public string[,] checks { get { return ChecksLA; } }
         public string[,] purchases { get { return PurchasesLA; } }
         public string[,] sales { get { return SalesLA; } }
+        public double[] salesMi { get { return SalesMi; } }
 
         public FileCruncher()
         {
@@ -44,8 +62,94 @@ namespace Csv_Scrubber
             ChecksLA = Checks.CsvToArrayList();
             PurchasesLA = Purchases.CsvToArrayList();
             SalesLA = Sales.CsvToArrayList();
+
+            caLength = CashLA.GetLength(0);
+            chLength = ChecksLA.GetLength(0);
+            puLength = PurchasesLA.GetLength(0);
+            saLength = SalesLA.GetLength(0);
+
+            SalesMi = new double[saLength];
+
+            for(int i = 0; i < saLength; i++)
+            {
+                if(i == 0) continue;
+                SalesMi[i] = SaTo(i);
+            }
             
             Console.WriteLine("DONE WITH STORING IN MEMORY");
+        }
+
+        public double SaTo(int arrIndex)
+        {
+            double SaAm = 0;
+
+            for(int i = 142; i < 158; i++)
+            {
+                if(SalesLA[arrIndex, i] != ""){
+                    if(arrIndex == 3753) 
+                    {
+                        Console.WriteLine(SalesLA[arrIndex, i]);
+                    }
+                    SaAm += Double.Parse(SalesLA[arrIndex, i]);
+                    if(arrIndex == 3753) Console.WriteLine(SaAm);
+                }
+            }
+            return SaAm;
+        }
+
+        public void CrunchData()
+        {
+            int pSaProb = 0;
+            int saEmLink = 0;
+            bool cashLinked = false;
+            int cashIndex = -1;
+
+            for(int i = 1; i < saLength; i++)
+            {
+                cashLinked = false;
+                for(int j = 1; j < caLength; j++)
+                {
+                    if(CashLA[j, (int)eLink.CaLinker] == SalesLA[i, (int)eLink.SaMain])
+                    {
+                        // Console.WriteLine(CashLA[j, (int)eLink.CaAm] + " to " + SalesMi[i]);
+                        cashIndex = j;
+                        cashLinked = true;
+                        continue;
+                    }
+                    else if(j == caLength - 1)
+                    {
+                        if(SalesLA[i, (int)eLink.SaLinker] == "" 
+                            && SalesLA[i, (int)eLink.SaLinker2] != ""
+                            && SalesMi[i] != 0)
+                        {
+                            saEmLink++;
+                        }
+                        // pSaProb++;
+                    }
+                }
+                if(cashLinked)
+                {
+                    // Console.WriteLine("i index: " + i);
+                    // Console.WriteLine("cash index " + cashIndex);
+                    double calSa = Math.Floor(SalesMi[i]);
+                    // if(i == 3753)
+                    // calSa -= (SalesMi[i] % 0.01d);
+                    double calCa = Math.Floor(double.Parse(CashLA[cashIndex, (int)eLink.CaAm]));
+                    // calCa = calCa - (calCa % 0.01d);
+                    if(!(calCa - 1 <= calSa && calSa <= calCa + 1) && SalesLA[i, (int)eLink.SaLinker2] != "")
+                    {
+                        Console.WriteLine("Estimated from sales: " + calSa + " Estimated Cash Slip: " + calCa + " Sales Number: " + SalesLA[i, (int)eLink.SaMain] + " Cash number: " + CashLA[cashIndex, (int)eLink.CaMain]);
+                        pSaProb++;
+                    }
+                }
+            }
+            Console.WriteLine(saLength);
+            Console.WriteLine("Potential Sales Problems: " + pSaProb);
+            Console.WriteLine("Sales Empty Link Field: " + saEmLink);
+            // for(int i = 1; i < caLength; i++)
+            // {
+                
+            // }
         }
 
     }
