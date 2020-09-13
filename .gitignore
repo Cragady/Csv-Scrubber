@@ -1,6 +1,6 @@
-txt-invoice-files/*
-txt-preparse/*
-parsed-files/*
+txt-invoice-files/*.csv
+txt-preparse/*.csv
+parsed-files/*.csv
 test-file
 .vscode
 bin
