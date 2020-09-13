@@ -17,7 +17,7 @@ namespace Csv_Scrubber
                 int command;
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("0: Quit\n1: Read File\n2: Write File\n3: Find potential parsing errors");
-                Console.WriteLine("4: Load Bulk\n5: Crunch Bulk\n6: Pre-file Write (RUN ONLY ONCE)");
+                Console.WriteLine("4: Load Bulk\n5: Crunch Bulk\n6: Pre-file Write");
                 try
                 {
                     command = Int32.Parse(Console.ReadLine());
@@ -74,7 +74,8 @@ namespace Csv_Scrubber
                     case 5:
                         try
                         {
-                            Crunch.CrunchData();
+                            Crunch.CrunchSData();
+                            Crunch.CrunchPData();
                         }
                         catch (Exception err) { Console.WriteLine("Unhandled Error " + err); }
                         break;

@@ -97,7 +97,7 @@ namespace Csv_Scrubber
             return SaAm;
         }
 
-        public void CrunchData()
+        public void CrunchSData()
         {
             int pSaProb = 0;
             int saEmLink = 0;
@@ -111,7 +111,6 @@ namespace Csv_Scrubber
                 {
                     if(CashLA[j, (int)eLink.CaLinker] == SalesLA[i, (int)eLink.SaMain])
                     {
-                        // Console.WriteLine(CashLA[j, (int)eLink.CaAm] + " to " + SalesMi[i]);
                         cashIndex = j;
                         cashLinked = true;
                         continue;
@@ -124,18 +123,13 @@ namespace Csv_Scrubber
                         {
                             saEmLink++;
                         }
-                        // pSaProb++;
                     }
                 }
                 if(cashLinked)
                 {
-                    // Console.WriteLine("i index: " + i);
-                    // Console.WriteLine("cash index " + cashIndex);
                     double calSa = Math.Floor(SalesMi[i]);
-                    // if(i == 3753)
-                    // calSa -= (SalesMi[i] % 0.01d);
                     double calCa = Math.Floor(double.Parse(CashLA[cashIndex, (int)eLink.CaAm]));
-                    // calCa = calCa - (calCa % 0.01d);
+
                     if(!(calCa - 1 <= calSa && calSa <= calCa + 1) && SalesLA[i, (int)eLink.SaLinker2] != "")
                     {
                         Console.WriteLine("Estimated from sales: " + calSa + " Estimated Cash Slip: " + calCa + " Sales Number: " + SalesLA[i, (int)eLink.SaMain] + " Cash number: " + CashLA[cashIndex, (int)eLink.CaMain]);
@@ -143,13 +137,57 @@ namespace Csv_Scrubber
                     }
                 }
             }
-            Console.WriteLine(saLength);
+            Console.WriteLine(saLength + " Records assessed.");
             Console.WriteLine("Potential Sales Problems: " + pSaProb);
             Console.WriteLine("Sales Empty Link Field: " + saEmLink);
-            // for(int i = 1; i < caLength; i++)
-            // {
-                
-            // }
+        }
+
+        public void CrunchPData()
+        {
+            int pPuProb = 0;
+            int puEmLink = 0;
+            bool cashLinked = false;
+            int cashIndex = -1;
+
+            for(int i = 1; i < puLength; i++)
+            {
+                cashLinked = false;
+                for(int j = 1; j < caLength; j++)
+                {
+                    if(CashLA[j, (int)eLink.CaLinker] == PurchasesLA[i, (int)eLink.PuMain])
+                    {
+                        cashIndex = j;
+                        cashLinked = true;
+                        continue;
+                    }
+                    else if(j == caLength - 1)
+                    {
+                        if(PurchasesLA[i, (int)eLink.PuLinker] == ""
+                            && PurchasesLA[i, (int)eLink.PuAm] != "")
+                        {
+                            puEmLink++;
+                        }
+                    }
+                }
+                if(cashLinked)
+                {
+                    double calPu = Math.Floor(double.Parse(PurchasesLA[i, (int)eLink.PuAm]));
+                    calPu *= -1;
+                    double calCa = Math.Floor(double.Parse(CashLA[cashIndex, (int)eLink.CaAm]));
+
+                    if(!(calCa - 1 <= calPu && calPu <= calCa + 1)
+                        && Int32.Parse(PurchasesLA[i, (int)eLink.PuMain]) > 305610)
+                    {
+                        Console.WriteLine("Estimated from purchases: " + calPu + " Estimated Cash Slip: " + calCa + " Purchase Number: " + PurchasesLA[i, (int)eLink.PuMain] + " Cash number: " + CashLA[cashIndex, (int)eLink.CaMain]);
+                        pPuProb++;
+                    }
+                }
+            }
+
+            Console.WriteLine(puLength + " Records assessed.");
+            Console.WriteLine("Potential Purchase Problems: " + pPuProb);
+            Console.WriteLine("Purchases Empty Link Field: " + puEmLink);
+
         }
 
     }
