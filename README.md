@@ -6,6 +6,10 @@ This is pretty much a barebones console application. It's likely to be single us
 
 As of this commit (on 9/12/2020), this application is finished for my purposes. If I continue to work on this, it will purely be for fun. Most likely, the continuation of upkeep on this project will benefit only me unless I change around `FileReader` or `Program`. Before I change `FileReader` or `Program`, I will likely change `FileCruncher` to make things slightly easier on me. For instance, I would probably refactor the code so certain chunks are re-used as opposed to rewritten, writing out the potential problems found to a `.md` or `.txt` file, etc. 
 
+## Access Database
+
+The files I am parsing through are exported from an Access Database. I am trying to find errors amongst records in Access. I likely would have had an easier time if I had exported the Access Database in a way that encapsulated the text in double quotation marks, but I was able to work though it just fine regardless.
+
 # Note on Test File
 
 The `Sales-Invoicing.csv` has been edited heavily, and a lot of information and fields deleted for privacy issues.
