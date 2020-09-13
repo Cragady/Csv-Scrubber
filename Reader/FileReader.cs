@@ -9,8 +9,6 @@ namespace Csv_Scrubber
 {
     public class FileReader
     {
-        // string[] Text = System.IO.File.ReadAllLines("../Sales-Invoicing.csv");
-        // string[] Text = File.ReadAllLines(@"C:\Users\DreamWalker64\dev2\Cascade\Sales-Invoicing.csv");
         private string[] Text;
         public string[] text
         {
