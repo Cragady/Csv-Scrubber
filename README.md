@@ -8,7 +8,7 @@ As of this commit (on 9/12/2020), this application is finished for my purposes. 
 
 ## Access Database
 
-The files I am parsing through are exported from an Access Database. I am trying to find errors amongst records in Access. I likely would have had an easier time if I had exported the Access Database in a way that encapsulated the text in double quotation marks, but I was able to work though it just fine regardless.
+The files I am parsing through are exported from an Access Database. I am trying to find errors amongst records in Access. I likely would have had an easier time if I had exported the Access Database in a way that encapsulated the text in double quotation marks, but I was able to work through it just fine regardless.
 
 # Note on Test File
 
